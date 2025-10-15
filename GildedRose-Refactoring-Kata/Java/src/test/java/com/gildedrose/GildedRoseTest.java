@@ -99,4 +99,39 @@ class GildedRoseTest {
         assertEquals(0, item.quality, "Quality should drop to 0 after the concert (sellIn < 0)");
     }
 
+    // "Conjured" items degrade in Quality twice as fast as normal items
+    @Test
+    void conjuredItem_qualityDecreasesTwiceAsFast() {
+        Item item = new Item("Conjured Mana Cake", 3, 6);
+        GildedRose app = new GildedRose(new Item[]{item});
+
+        app.updateQuality();
+
+        assertEquals(2, item.sellIn, "SellIn should decrease by 1");
+        assertEquals(4, item.quality, "Conjured items should lose 2 quality per day");
+    }
+
+    // Once the sell by date has passed, Conjured items degrade twice as fast again (total 4 per day)
+    @Test
+    void conjuredItem_qualityDecreasesFourAfterSellDate() {
+        Item item = new Item("Conjured Mana Cake", 0, 8);
+        GildedRose app = new GildedRose(new Item[]{item});
+
+        app.updateQuality();
+
+        assertEquals(-1, item.sellIn);
+        assertEquals(4, item.quality, "Conjured items should lose 4 quality per day after sell date");
+    }
+
+    // Quality of Conjured items never goes below 0
+    @Test
+    void conjuredItem_qualityNeverGoesBelowZero() {
+        Item item = new Item("Conjured Mana Cake", 1, 1);
+        GildedRose app = new GildedRose(new Item[]{item});
+
+        app.updateQuality();
+
+        assertEquals(0, item.quality, "Quality should not go below 0");
+    }
+
 }

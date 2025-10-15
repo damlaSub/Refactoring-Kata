@@ -9,45 +9,22 @@ class GildedRose {
 
     public void updateQuality() {
         for (Item item : items) {
-            if (item.name.equals("Aged Brie")
-                    || item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                increaseQuality(item);
-                if(item.name.equals("Backstage passes to a TAFKAL80ETC concert")){
-                    if (item.sellIn <6) {
-                        increaseQuality(item);
-                        increaseQuality(item);
-                    } else if(item.sellIn <11) {
-                        increaseQuality(item);
-                    }
-                }
-            } else {
-                decreaseQuality(item);
-            }
-
-            if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                item.sellIn--;
-            }
-
-            if (item.sellIn < 0) {
-                if (item.name.equals("Aged Brie")) {
-                    increaseQuality(item);
-                    } else if(item.name.equals("Backstage passes to a TAFKAL80ETC concert")){
-                    item.quality = 0;
-                } else {
-                    decreaseQuality(item);
-                }
-            }
-        }
-    }
-    void increaseQuality(Item item){
-        if (item.quality < 50) {
-            item.quality++;
-        }
-    }
-    void decreaseQuality(Item item){
-        if (item.quality > 0) {
-            if (!item.name.equals("Sulfuras, Hand of Ragnaros")) {
-                item.quality--;
+            ItemNames type = ItemNames.from(item.name);
+            if (type == ItemNames.AGED_BRIE){
+                AgedBrieUpdater updater = new AgedBrieUpdater();
+                updater.update(item);
+            } else if(type == ItemNames.BACKSTAGE_PASS){
+                BackstagePassesUpdater updater = new BackstagePassesUpdater();
+                updater.update(item);
+            } else if (type == ItemNames.SULFURAS)   {
+                SulfurasUpdater  updater = new SulfurasUpdater();
+                updater.update(item);
+            } else if(type == ItemNames.CONJURED){
+                ConjuredUpdater updater = new ConjuredUpdater();
+                updater.update(item);
+            }else {
+                CommonItemUpdater updater = new CommonItemUpdater();
+                updater.update(item);
             }
         }
     }
