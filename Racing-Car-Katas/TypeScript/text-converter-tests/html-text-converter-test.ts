@@ -12,5 +12,4 @@ describe('Html Converter', () => {
 		});
 
 	});
-
 });
