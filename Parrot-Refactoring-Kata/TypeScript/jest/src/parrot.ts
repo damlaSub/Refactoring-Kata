@@ -4,55 +4,26 @@ export enum ParrotTypes {
     NORWEGIAN_BLUE,
 }
 
-export class Parrot {
-    constructor(private parrotType: ParrotTypes,
-                private numberOfCoconuts: number,
-                private voltage: number,
-                private isNailed: boolean) {
+export abstract class Parrot {
+    constructor(protected numberOfCoconuts: number,
+                protected voltage: number,
+                protected isNailed: boolean) {
     }
+    abstract getSpeed():number;
 
-    public getSpeed(): number {
-        switch (this.parrotType) {
-            case ParrotTypes.EUROPEAN:
-                return this.getBaseSpeed();
-            case ParrotTypes.AFRICAN:
-                return Math.max(0, this.getBaseSpeed() - this.getLoadFactor() * this.numberOfCoconuts);
-            case ParrotTypes.NORWEGIAN_BLUE:
-                return (this.isNailed) ? 0 : this.getBaseSpeedWithVoltage(this.voltage);
-        }
-        throw new Error("Should be unreachable");
-    }
-
-    private getBaseSpeed(): number {
+    protected getBaseSpeed(): number {
         return 12;
     }
 
-    private getLoadFactor(): number {
+    protected getLoadFactor(): number {
         return 9;
     }
 
-    private getBaseSpeedWithVoltage(voltage: number): number {
+    protected getBaseSpeedWithVoltage(voltage: number): number {
         return Math.min(24, voltage * this.getBaseSpeed());
     }
 
-    public getCry(): String {
-        switch (this.parrotType) {
-            case ParrotTypes.EUROPEAN:
-                return "Sqoork!";
-            case ParrotTypes.AFRICAN:
-                return "Sqaark!";
-            case ParrotTypes.NORWEGIAN_BLUE:
-                return this.voltage > 0 ? "Bzzzzzz" : "...";
-        }
-        throw new Error("Should be unreachable");
-    }
+    abstract getCry(): String;
 
 }
-export function createParrot(
-    parrotType: ParrotTypes,
-    numberOfCoconuts: number,
-    voltage: number,
-    isNailed: boolean
-) : Parrot {
-    return new Parrot(parrotType, numberOfCoconuts, voltage, isNailed);
-}
+

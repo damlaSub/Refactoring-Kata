@@ -2,7 +2,10 @@
   "compileOnSave": true,
   "compilerOptions": {
     "target": "es2019",
-    "lib": ["esnext"],
+    "lib": ["esnext", "DOM"],
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "./build/",
@@ -16,12 +19,11 @@
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "typeRoots": ["./node_modules/@types"],
-    "types": ["jest"]
+    "types": ["jest", "node"]
   },
   "include": [
     "src/**/*.ts",
-    "test/**/*.ts",
-    "test/setupTests.d.ts"
+    "tests/**/*.ts"
   ],
   "exclude": [
     "node_modules",

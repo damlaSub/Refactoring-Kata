@@ -1,4 +1,5 @@
-import {createParrot, ParrotTypes} from '../src/parrot'
+import { ParrotTypes} from '../src/parrot'
+import { createParrot} from '../src/ParrotFactory'
 
 describe('Parrot', () => {
 
