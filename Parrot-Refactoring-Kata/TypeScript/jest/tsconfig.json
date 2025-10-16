@@ -1,0 +1,31 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es2019",
+    "lib": ["esnext"],
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "./build/",
+    "noEmitOnError": true,
+    "alwaysStrict": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["jest"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "test/setupTests.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build"
+  ]
+}
