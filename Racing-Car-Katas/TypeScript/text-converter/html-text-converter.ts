@@ -14,7 +14,7 @@ export default class HtmlTextConverter {
 		function stashNextCharacterAndAdvanceThePointer() {
 			const c = text.charAt(i);
 			i += 1;
-			return c;
+			return c; 
 		}
 
 		function addANewLine() {
