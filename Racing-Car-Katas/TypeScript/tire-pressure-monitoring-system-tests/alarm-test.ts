@@ -1,65 +1,75 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
 import 'mocha';
 import Alarm from '../tire-pressure-monitoring-system/alarm';
+import PsiPressure from '../tire-pressure-monitoring-system/psiPressure';
 import Sensor from '../tire-pressure-monitoring-system/sensor';
+
+class FakeSensor extends Sensor {
+  constructor(private value: number) {
+	  super();
+  }
+  popNextPressurePsiValue(): number {
+    return this.value;
+  }
+}
+
+class FakePsiPressure extends PsiPressure {
+  isOutOfRange(value: number): boolean {
+    return value < 17 || value > 21;
+  }
+}
 
 describe('Tyre Pressure Monitoring System', () => {
 
-	describe('Alarm', () => {
+  describe('Alarm', () => {
 
-		let sensorStub: sinon.SinonStub;
+    it('should keep alarm off when pressure is within normal range', () => {
+      const sensor = new FakeSensor(19); // normal pressure
+      const psi = new FakePsiPressure();
+      const alarm = new Alarm(sensor, psi);
 
-		beforeEach(() => {
-			sensorStub = sinon.stub(Sensor.prototype, 'popNextPressurePsiValue');
-		});
+      alarm.check();
 
-		afterEach(() => {
-			sensorStub.restore();
-		});
+      expect(alarm.isAlarmOn()).to.be.false;
+    });
 
-		it('should keep alarm off when pressure is within normal range', () => {
-			// Arrange
-			sensorStub.returns(19); // between 17 and 21
-			const alarm = new Alarm();
+    it('should turn alarm on when pressure is below low threshold', () => {
+      const sensor = new FakeSensor(15); // too low
+      const psi = new FakePsiPressure();
+      const alarm = new Alarm(sensor, psi);
 
-			// Act
-			alarm.check();
+      alarm.check();
 
-			// Assert
-			expect(alarm.isAlarmOn()).to.be.false;
-		});
+      expect(alarm.isAlarmOn()).to.be.true;
+    });
 
-		it('should turn alarm on when pressure is below low threshold', () => {
-			sensorStub.returns(15); // below 17
-			const alarm = new Alarm();
+    it('should turn alarm on when pressure is above high threshold', () => {
+      const sensor = new FakeSensor(23); // too high
+      const psi = new FakePsiPressure();
+      const alarm = new Alarm(sensor, psi);
 
-			alarm.check();
+      alarm.check();
 
-			expect(alarm.isAlarmOn()).to.be.true;
-		});
+      expect(alarm.isAlarmOn()).to.be.true;
+    });
 
-		it('should turn alarm on when pressure is above high threshold', () => {
-			sensorStub.returns(23); // above 21
-			const alarm = new Alarm();
+    it('should keep alarm on after being triggered once', () => {
+      // simulate first reading high, second reading normal
+      const readings = [23, 19];
+      let callIndex = 0;
+      const sensor = {
+        popNextPressurePsiValue: () => readings[callIndex++]
+      } as Sensor;
 
-			alarm.check();
+      const psi = new FakePsiPressure();
+      const alarm = new Alarm(sensor, psi);
 
-			expect(alarm.isAlarmOn()).to.be.true;
-		});
+      alarm.check(); // first: high -> alarm on
+      alarm.check(); // second: normal -> alarm stays on
 
-		it('should keep alarm on after being triggered once', () => {
-			// Alarm should remain on even if next reading is fine
-			sensorStub.onFirstCall().returns(23); // too high
-			sensorStub.onSecondCall().returns(19); // normal
+      expect(alarm.isAlarmOn()).to.be.true;
+    });
 
-			const alarm = new Alarm();
+  });
 
-			alarm.check(); // first: high -> alarm on
-			alarm.check(); // second: normal -> alarm stays on
-
-			expect(alarm.isAlarmOn()).to.be.true;
-		});
-
-	});
 });
