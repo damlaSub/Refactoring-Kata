@@ -1,12 +1,17 @@
-import sequence from './turn-number-sequence';
 import TurnTicket from './turn-ticket';
-type TurnNumberSequenceInstance = typeof sequence;
+/**
+ * Defines the contract for any object that can provide
+ * the next turn number. Any object with a getNextTurnNumber() 
+ * method returning a number satisfies this interface,
+ * including the singleton sequence or a mock for testing.
+ */
+export interface NextTurnNumberGenerator{
+    getNextTurnNumber():number;
+}
 
 export default class TicketDispenser {
 
-  constructor(private sequence: TurnNumberSequenceInstance) {
-    this.sequence = sequence;
-  }
+  constructor(private sequence: NextTurnNumberGenerator) {}
 
   public getTurnTicket(): TurnTicket {
     const newTurnNumber = this.sequence.getNextTurnNumber();
