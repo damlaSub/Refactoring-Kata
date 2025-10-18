@@ -38,4 +38,12 @@ describe('Turn Ticket Dispenser', () => {
 
     expect(ticketB.getTurnNumber()).to.eql(ticketA.getTurnNumber() + 1);
   });
+
+  it('should use an injected sequence if provided', () => {
+  const fakeSequence = { getNextTurnNumber: () => 42 };
+  const dispenser = new TicketDispenser(fakeSequence as any);
+  const ticket = dispenser.getTurnTicket();
+  expect(ticket.getTurnNumber()).to.eql(42);
+});
+
 });
