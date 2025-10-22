@@ -1,4 +1,6 @@
-export default class TelemetryClient {
+import TelemetryClientInterface from "./telemetry-client-interface";
+
+export default class TelemetryClient implements TelemetryClientInterface {
 
 	private onlineStatus: boolean;
 	private diagnosticMessageResult: string;

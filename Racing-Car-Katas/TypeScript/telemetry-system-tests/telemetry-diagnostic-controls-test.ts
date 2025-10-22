@@ -8,8 +8,8 @@ describe('Telemetry System', () => {
 	describe('TelemetryDiagnosticControls', () => {
 
 		it('CheckTransmission should send a diagnostic message and receive a status message response', () => {
-			const controls = new TelemetryDiagnosticControls();
-			(controls as any).telemetryClient = new FakeTelemetryClient();
+			const client = new FakeTelemetryClient();
+			const controls = new TelemetryDiagnosticControls(client);
 			controls.checkTransmission();
 			expect(controls.readDiagnosticInfo()).to.contain('OK: TEST RESULT');
 
